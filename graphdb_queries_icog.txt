@@ -1,0 +1,83 @@
+// Person node
+CREATE (abdulmunim:Person {name: "Abdulmunim J Jemal", location: "Addis Ababa, Ethiopia"})
+
+// Education node and relationship
+CREATE (aauni:Education {institution: "Addis Ababa University", degree: "BSc Software Engineering", field: "Software Engineering", startYear: 2022, endYear: 2026, cgpa: 4.0})
+CREATE (abdulmunim)-[:STUDIED_AT]->(aauni)
+
+// Skill nodes
+CREATE (python:Skill {name: "Python"}),
+       (javascript:Skill {name: "JavaScript"}),
+       (typescript:Skill {name: "TypeScript"}),
+       (java:Skill {name: "Java"}),
+       (cpp:Skill {name: "C++"}),
+       (nestjs:Skill {name: "NestJS"}),
+       (expressjs:Skill {name: "ExpressJS"}),
+       (fastapi:Skill {name: "FastAPI"}),
+       (flask:Skill {name: "Flask"}),
+       (django:Skill {name: "Django"}),
+       (reactjs:Skill {name: "ReactJS"}),
+       (tailwind:Skill {name: "Tailwind"}),
+       (postgres:Skill {name: "PostgreSQL"}),
+       (mongodb:Skill {name: "MongoDB"}),
+       (nlp:Skill {name: "Natural Language Processing"}),
+       (ml:Skill {name: "Machine Learning"}),
+       (docker:Skill {name: "Docker"})
+
+// Experience nodes
+CREATE (lesan:NLP_Engineer {company: "Lesan AI", location: "Berlin, Germany", startDate: "July 2022", endDate: "May 2023"}),
+       (minnovation:Software_Engineer {company: "Minnovation", location: "Addis Ababa, Ethiopia", startDate: "Before July 2022"}),
+       (moodme:ML_Engineer {company: "MoodMe", location: "Texas, USA", startDate: "February 2024", endDate: "Present"}),
+       (ignitus:Lead_NLP_Engineer {company: "Ignitus", location: "Pittsburgh, Pennsylvania, USA", startDate: "January 2024", endDate: "Present"})
+
+// Relationships
+CREATE (abdulmunim)-[:HAS_SKILL]->(python),
+       (abdulmunim)-[:HAS_SKILL]->(javascript),
+       (abdulmunim)-[:HAS_SKILL]->(typescript),
+       (abdulmunim)-[:HAS_SKILL]->(java),
+       (abdulmunim)-[:HAS_SKILL]->(cpp),
+       (abdulmunim)-[:HAS_SKILL]->(nestjs),
+       (abdulmunim)-[:HAS_SKILL]->(expressjs),
+       (abdulmunim)-[:HAS_SKILL]->(fastapi),
+       (abdulmunim)-[:HAS_SKILL]->(flask),
+       (abdulmunim)-[:HAS_SKILL]->(django),
+       (abdulmunim)-[:HAS_SKILL]->(reactjs),
+       (abdulmunim)-[:HAS_SKILL]->(tailwind),
+       (abdulmunim)-[:HAS_SKILL]->(postgres),
+       (abdulmunim)-[:HAS_SKILL]->(mongodb),
+       (abdulmunim)-[:HAS_SKILL]->(nlp),
+       (abdulmunim)-[:HAS_SKILL]->(ml),
+       (abdulmunim)-[:HAS_SKILL]->(docker),
+       
+       (lesan)-[:USED_SKILL]->(nlp),
+       (lesan)-[:USED_SKILL]->(python),
+       (minnovation)-[:USED_SKILL]->(nestjs),
+       (minnovation)-[:USED_SKILL]->(expressjs),
+       (moodme)-[:USED_SKILL]->(ml),
+       (moodme)-[:USED_SKILL]->(java),
+       (ignitus)-[:USED_SKILL]->(nlp),
+       (ignitus)-[:USED_SKILL]->(python),
+
+       (abdulmunim)-[:WORKED_AT]->(lesan),
+       (abdulmunim)-[:WORKED_AT]->(minnovation),
+       (abdulmunim)-[:WORKED_AT]->(moodme),
+       (abdulmunim)-[:WORKED_AT]->(ignitus)
+
+
+// all skills
+
+MATCH (p:Person)-[:HAS_SKILL]->(s:Skill)
+WHERE p.name = "Abdulmunim J Jemal"
+RETURN s.name
+
+
+// skills for specific job
+MATCH (e:Experience {company: "Lesan AI"})-[:USED_SKILL]->(s:Skill)
+RETURN e.company, collect(s.name) AS SkillsUsed
+
+
+// all jobs and skilled used there
+
+MATCH (p:Person)-[:WORKED_AT]->(e:Experience)-[:USED_SKILL]->(s:Skill)
+WHERE p.name = "Abdulmunim J Jemal"
+RETURN e.company, collect(s.name) AS SkillsUsed
